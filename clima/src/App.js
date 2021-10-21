@@ -28,6 +28,15 @@ const Contenedor = styled.div`
     
       }
 `
+const Alerta = styled.div`
+  background-color: red;
+  color:white;
+  width: 100%;
+  border: none;
+  margin-bottom: 5px;
+  text-align: center;
+`
+
 
 function App() {
 
@@ -42,6 +51,8 @@ function App() {
 
   const {ciudad, pais} = datos;
 
+  const [notFound, setNotFound] = useState(false);
+
   useEffect(() => {
 
     if (listo) {
@@ -55,6 +66,12 @@ function App() {
   
           setApiDatos(transformar);
           setlisto(false)
+
+          if (transformar.cod === "404" ) {
+            setNotFound(true)
+          }else {
+            setNotFound(false)
+          }
   
       }
       
@@ -69,8 +86,15 @@ function App() {
           <div>
             <Titulo>Clima React App</Titulo>
             <Contenedor>
+
             
                 <Formulario setDatos={setDatos} datos={datos} setlisto={setlisto}/>
+
+                {notFound ? <Alerta>
+                  
+                  <h1>No hay resultados</h1>
+                </Alerta> 
+                : null}
 
                 <Clima apiDatos={apiDatos} />
    

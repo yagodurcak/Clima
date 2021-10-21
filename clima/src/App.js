@@ -1,5 +1,7 @@
-import Formulario from "./componentes/Formulario"
+import React, {useEffect, useState} from 'react';
+
 import Clima from "./componentes/Clima"
+import Formulario from "./componentes/Formulario"
 import styled from "@emotion/styled";
 
 const Titulo = styled.h1`
@@ -27,19 +29,50 @@ const Contenedor = styled.div`
       }
 `
 
-
-
-
-
 function App() {
+
+  const [datos, setDatos] = useState({
+    ciudad:"",
+    pais:""
+  })
+
+  const [listo, setlisto] = useState(false);
+
+  const [apiDatos, setApiDatos] = useState({})
+
+  const {ciudad, pais} = datos;
+
+  useEffect(() => {
+
+    if (listo) {
+      
+      const consultarApi = async () => {
+          const id = `b51da395b32b57bfdab64ebcadc92239`;
+          const url= `http://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=${id}`;
+  
+          const respuesta = await fetch(url);
+          const transformar = await respuesta.json();
+  
+          setApiDatos(transformar);
+          setlisto(false)
+  
+      }
+      
+      consultarApi()
+    }
+ 
+  }, [listo]);
+  
+  
+
   return (
           <div>
             <Titulo>Clima React App</Titulo>
             <Contenedor>
             
-                <Formulario/>
+                <Formulario setDatos={setDatos} datos={datos} setlisto={setlisto}/>
 
-                <Clima/>
+                <Clima apiDatos={apiDatos} />
    
             </Contenedor>
           </div>

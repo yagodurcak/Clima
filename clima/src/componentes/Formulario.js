@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useState} from 'react'
+
 import styled from '@emotion/styled';
 
 const BloqueForm = styled.div`
@@ -65,28 +66,78 @@ const Boton = styled.button`
   
 `
 
+const Alerta = styled.button`
+  background-color: red;
+  color:white;
+  width: 100%;
+  border: none;
+  margin-bottom: 5px;
+`
 
 
-function Formulario() {
+function Formulario({setDatos,datos,setlisto}) {
+
+
+  const [error, setError] = useState(false)
+
+  
+  
+  const guardardatos = (e) => {
+    
+    
+    setDatos({
+      ...datos,
+      [e.target.name]: e.target.value
+    })     
+    
+  };
+  
+  const submitDatos = (e) => {
+    const {ciudad, pais}= datos;
+    
+      e.preventDefault();
+
+      // validar lineas!!
+
+      if (ciudad.trim() === "" || pais.trim() === "") {
+        setError(true);
+        
+        return
+      }
+
+      setError(false);     
+
+      setlisto(true)
+      
+    }
+
     return (
       <BloqueForm>
-        <form action="">
+        
+        <form action="" onSubmit={submitDatos}>
+          {error ? <Alerta> <h1>Debes completar todos los campos</h1> </Alerta>  : null }
           <BlockCampos className="block-ciudad">
             <Label htmlFor=""> Ciudad: </Label>
-            <Input type="text" placeholder="Ciudad" />
+            <Input type="text" placeholder="Ciudad"  onChange={guardardatos} name="ciudad"/>
           </BlockCampos>
 
           <BlockCampos className="block-pais">
             <Label htmlFor="">Pais:</Label>
-            <Select name="Ciudad" id="">
+            <Select name="pais" id="" onChange={guardardatos}>
+
+              <option >---seleccione---</option>
+              
               <option value="Argentina">Argentina</option>
               <option value="Estados Unidos">Estados Unidos</option>
+              
+              
             </Select>
           </BlockCampos>
           <Boton type="submit">Buscar Clima</Boton>
         </form>
       </BloqueForm>
     );
+    
 }
 
 export default Formulario
